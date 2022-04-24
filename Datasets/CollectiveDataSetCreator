@@ -1,0 +1,28 @@
+import pandas as pd
+
+arafacts_project_df = pd.read_csv("AraFacts.csv")
+
+# we will not be taking sarcasm as there isn't enough data for it
+arafacts_project_df_true = arafacts_project_df[arafacts_project_df['label'] == 'True']
+
+arafacts_project_df_false = arafacts_project_df[arafacts_project_df['label'] == 'False']
+arafacts_project_df_partly_false = arafacts_project_df[arafacts_project_df['label'] == 'Partly-false']
+
+arafacts_project_df = pd.concat([arafacts_project_df_true, arafacts_project_df_false, arafacts_project_df_partly_false], ignore_index=True)
+
+fake_news_project_df = pd.concat([pd.read_csv("dataset.csv"), pd.read_csv("dataset2.csv")])
+
+# we want only the true labels of the fake news project
+fake_news_project_df = fake_news_project_df[fake_news_project_df['label'] == 'trusted']
+total_collection_df = pd.concat([arafacts_project_df, fake_news_project_df], ignore_index=True, join='inner')
+
+# normalizing labels: trusted -> True, Partly-false -> False
+total_collection_df.loc[total_collection_df['label'] == 'trusted', 'label'] = 'True'
+total_collection_df.loc[total_collection_df['label'] == 'Partly-false', 'label'] = 'False'
+
+total_collection_df = total_collection_df[total_collection_df['claim'].notna()]
+
+
+total_collection_df.to_csv("collective_dataset.csv")
+
+
