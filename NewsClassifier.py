@@ -30,4 +30,4 @@ def build_model():
     return logisticRegClassifier, multiNBClassifier, tfidf_vect
 
 
-classify_news("مرحبا انا سجود")
+classify_news("مرحبا ةيةية انا سجود")
